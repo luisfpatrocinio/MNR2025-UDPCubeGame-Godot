@@ -62,6 +62,7 @@ offset_right = 128.0
 offset_bottom = 128.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(128, 128)
 
 [node name="FaceNumberLabel" type="Label" parent="CubeFace"]
 layout_mode = 1

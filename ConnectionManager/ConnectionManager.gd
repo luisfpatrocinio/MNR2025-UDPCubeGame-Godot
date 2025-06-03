@@ -36,6 +36,9 @@ signal buttonAPressed;
 # Sinal para quando o botão B é pressionado
 signal buttonBPressed;
 
+# Sinal para quando a face muda
+signal faceChanged;
+
 ## Gerencia pacotes recebidos e atualiza o dicionário de inputs com base no tipo de pacote.
 ## Pacotes que começam com "A" contêm dados do analógico.
 ## Pacotes que começam com "B" indicam um botão pressionado.
@@ -66,7 +69,10 @@ func managePacket(packet: String):
 					emit_signal("buttonBPressed");
 		"C":
 			var _faceNo = int(packet.split_floats("|", false).slice(1)[0]);
-			inputDict.set("faceNo", _faceNo);
+			var _actualFace = inputDict.get("faceNo");
+			if _faceNo != 0 && _actualFace != _faceNo:
+				inputDict.set("faceNo", _faceNo);
+				emit_signal("faceChanged", _faceNo);
 
 ## Inicia o servidor para escutar conexões na porta especificada.
 func _ready() -> void:
