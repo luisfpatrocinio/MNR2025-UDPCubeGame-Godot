@@ -18,6 +18,7 @@ var inputDict: Dictionary = {
 	"yAxis": 0.0,
 	"buttonA": false,
 	"buttonB": false,
+	"faceNo": 0
 }
 
 # Cria client para envio de pacotes UDP
@@ -63,7 +64,9 @@ func managePacket(packet: String):
 					inputDict.set("buttonB", true);
 					print("BUTTON PRESSED: B");
 					emit_signal("buttonBPressed");
-
+		"C":
+			var _faceNo = int(packet.split_floats("|", false).slice(1)[0]);
+			inputDict.set("faceNo", _faceNo);
 
 ## Inicia o servidor para escutar conexões na porta especificada.
 func _ready() -> void:

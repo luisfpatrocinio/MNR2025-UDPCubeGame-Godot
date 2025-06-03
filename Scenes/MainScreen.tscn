@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://cuuakidmirlqg"]
+[gd_scene load_steps=5 format=3 uid="uid://cuuakidmirlqg"]
 
 [ext_resource type="Script" uid="uid://0bg5ed4wbit5" path="res://Scripts/MainScreen.gd" id="1_s7h0p"]
+[ext_resource type="FontFile" uid="uid://boeafuqa3rwvc" path="res://Fonts/Bangers/Bangers-Regular.ttf" id="2_ewbgq"]
 
 [sub_resource type="Gradient" id="Gradient_4vmk2"]
 colors = PackedColorArray(0, 0, 0.270588, 1, 0, 0.662745, 1, 1)
@@ -45,5 +46,38 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Conectando..."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CubeFace" type="Panel" parent="."]
+custom_minimum_size = Vector2(256, 256)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -128.0
+offset_right = 128.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FaceNumberLabel" type="Label" parent="CubeFace"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_ewbgq")
+theme_override_font_sizes/font_size = 64
+text = "1"
 horizontal_alignment = 1
 vertical_alignment = 1
