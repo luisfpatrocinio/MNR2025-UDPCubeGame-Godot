@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=3 uid="uid://cuuakidmirlqg"]
+
+[ext_resource type="Script" uid="uid://0bg5ed4wbit5" path="res://Scripts/MainScreen.gd" id="1_s7h0p"]
+
+[sub_resource type="Gradient" id="Gradient_4vmk2"]
+colors = PackedColorArray(0, 0, 0.270588, 1, 0, 0.662745, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_sfojv"]
+gradient = SubResource("Gradient_4vmk2")
+fill_to = Vector2(0, 1)
+
+[node name="MainScreen" type="CanvasLayer"]
+script = ExtResource("1_s7h0p")
+
+[node name="Background" type="TextureRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_sfojv")
+
+[node name="DisconnectBlock" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="DisconnectBlock"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.662745)
+
+[node name="Label" type="Label" parent="DisconnectBlock"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Conectando..."
+horizontal_alignment = 1
+vertical_alignment = 1

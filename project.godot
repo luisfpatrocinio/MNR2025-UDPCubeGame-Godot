@@ -11,5 +11,14 @@ config_version=5
 [application]
 
 config/name="MNR2025 Cube"
+run/main_scene="uid://cuuakidmirlqg"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+ConnectionManager="*res://ConnectionManager/ConnectionManager.tscn"
+
+[editor]
+
+naming/scene_name_casing=1

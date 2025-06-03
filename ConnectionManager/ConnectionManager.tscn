@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://bq7agclieod7l"]
+
+[ext_resource type="Script" uid="uid://pwqh8ex3fxrd" path="res://ConnectionManager/ConnectionManager.gd" id="1_w6xo0"]
+
+[node name="ConnectionManager" type="Node"]
+script = ExtResource("1_w6xo0")
+
+[node name="SendBroadcastTimer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="timeout" from="SendBroadcastTimer" to="." method="sendBroadcast"]
