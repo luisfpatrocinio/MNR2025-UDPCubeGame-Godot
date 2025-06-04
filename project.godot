@@ -13,7 +13,8 @@ config_version=5
 config/name="MNR2025 Cube"
 run/main_scene="uid://cuuakidmirlqg"
 config/features=PackedStringArray("4.4", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="uid://4yp7d145qdj5"
+config/windows_native_icon="res://CubeGame.ico"
 
 [autoload]
 
