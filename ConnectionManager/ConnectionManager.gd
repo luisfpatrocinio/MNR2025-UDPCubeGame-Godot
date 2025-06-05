@@ -1,6 +1,6 @@
 extends Node
 
-const BROADCAST_IP = "192.168.137.255";
+const BROADCAST_IP = "192.168.137.189";
 const BROADCAST_PORT = 1234;
 
 ## Porta UDP na qual o servidor irá escutar conexões.
@@ -14,11 +14,10 @@ var peers: Array[PacketPeerUDP] = [];
 
 ## Dicionário que armazena o estado atual do input (eixos e botões).
 var inputDict: Dictionary = {
-	"xAxis": 0.0,
-	"yAxis": 0.0,
-	"buttonA": false,
-	"buttonB": false,
-	"faceNo": 0
+	"roll": 0,
+	"pitch": 0,
+	"faceNo": 0,
+	"rolling": false
 }
 
 # Cria client para envio de pacotes UDP
@@ -51,6 +50,7 @@ func managePacket(packet: String):
 		
 	# Se a mensagem não for um ack, processa o pacote
 	var _firstChar = packet[0];
+	#print("Pacote recebido. Tipo: %s" % [_firstChar]);
 	match _firstChar:
 		"A":
 			var _vector = packet.split_floats("|", false).slice(1);
@@ -69,10 +69,18 @@ func managePacket(packet: String):
 					emit_signal("buttonBPressed");
 		"C":
 			var _faceNo = int(packet.split_floats("|", false).slice(1)[0]);
+			
+			inputDict.set("rolling", _faceNo == 0);
+			
 			var _actualFace = inputDict.get("faceNo");
 			if _faceNo != 0 && _actualFace != _faceNo:
 				inputDict.set("faceNo", _faceNo);
 				emit_signal("faceChanged", _faceNo);
+		"R":
+			var _roll = int(packet.split_floats("|", false).slice(1)[0]);
+			var _pitch = int(packet.split_floats("|", false).slice(1)[1]);
+			inputDict["roll"] = _roll;
+			inputDict["pitch"] = _pitch;
 
 ## Inicia o servidor para escutar conexões na porta especificada.
 func _ready() -> void:
