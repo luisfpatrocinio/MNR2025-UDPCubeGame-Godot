@@ -1,6 +1,6 @@
 extends Node
 
-const BROADCAST_IP = "192.168.137.189";
+const BROADCAST_IP = "192.168.137.255";
 const BROADCAST_PORT = 1234;
 
 ## Porta UDP na qual o servidor irá escutar conexões.

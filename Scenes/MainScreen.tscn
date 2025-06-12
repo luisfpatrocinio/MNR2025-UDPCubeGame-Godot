@@ -1,7 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://cuuakidmirlqg"]
+[gd_scene load_steps=6 format=3 uid="uid://cuuakidmirlqg"]
 
 [ext_resource type="Script" uid="uid://0bg5ed4wbit5" path="res://Scripts/MainScreen.gd" id="1_s7h0p"]
 [ext_resource type="FontFile" uid="uid://boeafuqa3rwvc" path="res://Fonts/Bangers/Bangers-Regular.ttf" id="2_ewbgq"]
+[ext_resource type="PackedScene" uid="uid://b303iooru4jsu" path="res://Scenes/World.tscn" id="3_0prsd"]
 
 [sub_resource type="Gradient" id="Gradient_4vmk2"]
 colors = PackedColorArray(0, 0, 0.270588, 1, 0, 0.662745, 1, 1)
@@ -9,31 +10,6 @@ colors = PackedColorArray(0, 0, 0.270588, 1, 0, 0.662745, 1, 1)
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_sfojv"]
 gradient = SubResource("Gradient_4vmk2")
 fill_to = Vector2(0, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ewbgq"]
-albedo_color = Color(1, 0.662745, 0, 1)
-
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ewbgq"]
-sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
-ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
-
-[sub_resource type="Sky" id="Sky_0prsd"]
-sky_material = SubResource("ProceduralSkyMaterial_ewbgq")
-
-[sub_resource type="Environment" id="Environment_ip4yt"]
-background_mode = 1
-background_color = Color(0, 0, 0.270588, 1)
-sky = SubResource("Sky_0prsd")
-ambient_light_source = 2
-ambient_light_color = Color(0, 1, 1, 1)
-ambient_light_energy = 2.0
-reflected_light_source = 1
-tonemap_mode = 2
-tonemap_white = 6.9
-glow_enabled = true
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0prsd"]
-albedo_color = Color(0.662745, 0, 1, 1)
 
 [node name="MainScreen" type="CanvasLayer"]
 script = ExtResource("1_s7h0p")
@@ -71,6 +47,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_ewbgq")
+theme_override_font_sizes/font_size = 32
 text = "Conectando..."
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -121,24 +99,5 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Debug Label"
 
-[node name="World" type="Node3D" parent="."]
+[node name="World" parent="." instance=ExtResource("3_0prsd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-
-[node name="PatroCube" type="CSGBox3D" parent="World"]
-material_override = SubResource("StandardMaterial3D_ewbgq")
-size = Vector3(2, 2, 2)
-
-[node name="Camera3D" type="Camera3D" parent="World"]
-transform = Transform3D(-3.1999e-08, -0.5, 0.866025, -4.37114e-08, 0.866025, 0.5, -1, -2.18557e-08, -4.95676e-08, 5, 3, 0)
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="World"]
-environment = SubResource("Environment_ip4yt")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World"]
-transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
-shadow_enabled = true
-
-[node name="Floor" type="CSGBox3D" parent="World"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
-size = Vector3(10, 2, 10)
-material = SubResource("StandardMaterial3D_0prsd")

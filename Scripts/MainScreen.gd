@@ -1,10 +1,14 @@
 extends CanvasLayer
 
+## Disconnect Block Interface
 @onready var disconnectBlock: Control = get_node("DisconnectBlock");
+## Panel that shows the cube face number
 @onready var cubePanel: Panel = get_node("CubeFace");
-
+## 3D object representing the cube
 @onready var patroCube: CSGBox3D = get_node("World/PatroCube");
-
+## Debug Mode flag
+var showDebug : bool = false;
+## Debug Label
 @onready var debugLabel: Label = get_node("DebugLabel");
 
 func _ready() -> void:
@@ -24,8 +28,13 @@ func _onFaceChanged(_newFaceValue) -> void:
 	SetCubeFace(_newFaceValue);
 
 func _process(_delta: float) -> void:
+	# Toggle Debug Mode
+	if Input.is_action_just_pressed("ui_page_up"):
+		showDebug = !showDebug;
+	
 	var _roll = ConnectionManager.inputDict["roll"];
 	var _pitch = ConnectionManager.inputDict["pitch"];
+	
 	# Rotate cube - Pitch
 	var _newRotationY = -90 / 11 * _roll;
 	_newRotationY = deg_to_rad(_newRotationY);
