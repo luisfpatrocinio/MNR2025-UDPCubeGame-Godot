@@ -14,6 +14,8 @@ var showDebug : bool = false;
 func _ready() -> void:
 	ConnectionManager.connect("playerConnected", _onPlayerConnected);
 	ConnectionManager.connect("faceChanged", _onFaceChanged);
+	ConnectionManager.connect("connectionLost", _onConnectionLost);
+	ConnectionManager.connect("heartbeat", _onHeartbeat);
 	disconnectBlock.visible = true;
 	cubePanel.visible = false;
 	
@@ -22,10 +24,19 @@ func _onPlayerConnected(_playerId: String) -> void:
 	print(_playerId);
 	disconnectBlock.visible = false;
 	cubePanel.visible = true;
+	
+func _onHeartbeat() -> void:
+	disconnectBlock.visible = false;
+	
+	pass
 
 func _onFaceChanged(_newFaceValue) -> void:
 	print("Nova face: %d" % [_newFaceValue]);
 	SetCubeFace(_newFaceValue);
+	
+func _onConnectionLost() -> void:
+	print("Conexão perdida.");
+	disconnectBlock.visible = true;
 
 func _process(_delta: float) -> void:
 	# Toggle Debug Mode
@@ -34,6 +45,7 @@ func _process(_delta: float) -> void:
 	
 	var _roll = ConnectionManager.inputDict["roll"];
 	var _pitch = ConnectionManager.inputDict["pitch"];
+	var _yaw = ConnectionManager.inputDict["yaw"]
 	
 	# Rotate cube - Pitch
 	var _newRotationY = -90 / 11 * _roll;
@@ -45,13 +57,16 @@ func _process(_delta: float) -> void:
 	#print("New rotation: %f, %f" % [_newRotationX, _newRotationY]);
 	
 	# patroCube.rotation = patroCube.rotation.move_toward(Vector3(_newRotationX, _newRotationY, 0), 0.20);
-	patroCube.rotation.x = move_toward(patroCube.rotation.x, _newRotationX, 0.05);
-	patroCube.rotation.z = move_toward(patroCube.rotation.z, _newRotationY, 0.05);
-	patroCube.position.y = lerp(patroCube.position.y, 2.0 * float(ConnectionManager.inputDict["rolling"]), 0.10)
+	patroCube.rotation.x = lerp(patroCube.rotation.x, _newRotationX, 0.05);
+	patroCube.rotation.z = lerp(patroCube.rotation.z, _newRotationY, 0.05);
+	#patroCube.rotation.y = deg_to_rad(_yaw);
+	patroCube.position.y = lerp(patroCube.position.y, 2.0 * float(ConnectionManager.inputDict["rolling"]), 0.01)
 	
 	debugLabel.text = "DEBUG:\n";
 	debugLabel.text += "Pitch: %d\n" % ConnectionManager.inputDict["pitch"];
 	debugLabel.text += "Roll: %d\n" % ConnectionManager.inputDict["roll"];
+	debugLabel.text += "Yaw: %d\n" % ConnectionManager.inputDict["yaw"];
+	debugLabel.text += "Timer: %d\n" % ConnectionManager.get_node("HeartbeatTimer").time_left;
 	pass
 
 func SetCubeFace(_newCubeFace) -> void:

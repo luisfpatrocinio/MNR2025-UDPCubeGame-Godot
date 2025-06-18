@@ -8,4 +8,8 @@ script = ExtResource("1_w6xo0")
 [node name="SendBroadcastTimer" type="Timer" parent="."]
 autostart = true
 
+[node name="HeartbeatTimer" type="Timer" parent="."]
+wait_time = 5.0
+
 [connection signal="timeout" from="SendBroadcastTimer" to="." method="sendBroadcast"]
+[connection signal="timeout" from="HeartbeatTimer" to="." method="_on_heartbeat_timer_timeout"]

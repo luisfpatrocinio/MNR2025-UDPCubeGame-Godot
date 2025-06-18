@@ -1,7 +1,7 @@
 extends Node
 
 const BROADCAST_IP = "192.168.137.255";
-const BROADCAST_PORT = 1234;
+const BROADCAST_PORT = 4469;
 
 ## Porta UDP na qual o servidor irá escutar conexões.
 const PORT = 5000;
@@ -16,6 +16,7 @@ var peers: Array[PacketPeerUDP] = [];
 var inputDict: Dictionary = {
 	"roll": 0,
 	"pitch": 0,
+	"yaw": 0,
 	"faceNo": 0,
 	"rolling": false
 }
@@ -38,15 +39,28 @@ signal buttonBPressed;
 # Sinal para quando a face muda
 signal faceChanged;
 
+signal connectionLost;
+
+signal heartbeat;
+
 ## Gerencia pacotes recebidos e atualiza o dicionário de inputs com base no tipo de pacote.
 ## Pacotes que começam com "A" contêm dados do analógico.
 ## Pacotes que começam com "B" indicam um botão pressionado.
 func managePacket(packet: String):
 	# Checar se a mensagem é um ack
 	if packet == "udp_handshake_ack":
-		print("CONEXÃO ESTABELECIDA!");
+		print("[ConnectionManager] CONEXÃO ESTABELECIDA!");
 		connectionEstablished = true;
-		return ;
+		return;
+	
+	if packet == "heartbeat":
+		print("[ConnectionManager] Received Heartbeat")
+		send_data("heartbeat_ack");
+		$HeartbeatTimer.stop();
+		$HeartbeatTimer.start();
+		emit_signal("heartbeat");
+		connectionEstablished = true;
+		return;
 		
 	# Se a mensagem não for um ack, processa o pacote
 	var _firstChar = packet[0];
@@ -79,8 +93,10 @@ func managePacket(packet: String):
 		"R":
 			var _roll = int(packet.split_floats("|", false).slice(1)[0]);
 			var _pitch = int(packet.split_floats("|", false).slice(1)[1]);
+			var _yaw = int(packet.split_floats("|", false).slice(1)[2]);
 			inputDict["roll"] = _roll;
 			inputDict["pitch"] = _pitch;
+			inputDict["yaw"] = _yaw;
 
 ## Inicia o servidor para escutar conexões na porta especificada.
 func _ready() -> void:
@@ -109,6 +125,8 @@ func _process(delta: float) -> void:
 		peers.append(peer)
 		
 		emit_signal("playerConnected", peer.get_packet_ip());
+		
+		$HeartbeatTimer.start();
 	else:
 		# Atualiza os pacotes recebidos dos peers existentes
 		update_peers_and_packets()
@@ -139,7 +157,7 @@ func send_data(message: String):
 	for peer: PacketPeerUDP in peers:
 		var _ip = peer.get_packet_ip()
 		var _msg = message.to_utf8_buffer();
-		print("Sending to %s | Message: %s" % [_ip, message])
+		print("[ConnectionManager] Sending to %s | Message: %s" % [_ip, message])
 		peer.put_packet(_msg);
 
 
@@ -154,3 +172,8 @@ func sendBroadcast():
 		client.put_packet("udp_handshake".to_utf8_buffer());
 		print("Enviando broadcast para %s ..." % [BROADCAST_IP]);
 		return ;
+
+
+func _on_heartbeat_timer_timeout() -> void:
+	emit_signal("connectionLost");
+	connectionEstablished = false;
